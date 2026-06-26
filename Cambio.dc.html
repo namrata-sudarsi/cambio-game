@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Caveat:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; }
+    body { background: #F5F0E8; }
+    @keyframes cardReveal {
+      0% { transform: perspective(600px) rotateY(90deg) scale(0.9); opacity: 0.4; }
+      100% { transform: perspective(600px) rotateY(0) scale(1); opacity: 1; }
+    }
+    @keyframes gentlePulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(212,133,106,0.45); }
+      50% { box-shadow: 0 0 0 7px rgba(212,133,106,0); }
+    }
+    @keyframes pop {
+      0% { transform: scale(0.5); opacity: 0; }
+      60% { transform: scale(1.12); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes aiCardOut {
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateY(28px) translateX(16px) scale(0.6) rotate(10deg); opacity: 0; }
+    }
+    @keyframes aiCardIn {
+      0% { transform: translateY(-28px) scale(0.6); opacity: 0; }
+      55% { transform: translateY(3px) scale(1.04); opacity: 1; }
+      100% { transform: translateY(0) scale(1); opacity: 1; }
+    }
+    @keyframes discardDrop {
+      0% { transform: translateY(-30px) scale(0.7) rotate(-8deg); opacity: 0; }
+      50% { transform: translateY(4px) scale(1.05) rotate(1deg); opacity: 1; }
+      100% { transform: translateY(0) scale(1) rotate(0); opacity: 1; }
+    }
+  </style>
+</helmet>
+
+<div style="height: 100dvh; background: #F5F0E8; font-family: Nunito, sans-serif; color: #3D3228; display: flex; flex-direction: column; align-items: center; overflow: hidden">
+
+  <sc-if value="{{ isSetup }}" hint-placeholder-val="{{ true }}">
+    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100dvh; padding: 16px 20px; width: 100%; max-width: 400px; overflow: auto">
+      <div style="display: flex; justify-content: center; align-items: flex-end; margin-bottom: 32px; height: 120px">
+        <div style="width: 54px; height: 78px; border-radius: 10px; background: linear-gradient(145deg, #8BAA84, #6B8965); border: 1.5px solid #5F7D59; transform: rotate(-20deg) translateY(-2px); box-shadow: 0 4px 12px rgba(61,50,40,0.15); position: relative; margin-right: -14px; z-index: 1">
+          <div style="position: absolute; inset: 4px; border-radius: 7px; border: 1.5px solid rgba(255,255,255,0.13)"></div>
+          <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 16px; color: rgba(255,255,255,0.2)">✿</div>
+        </div>
+        <div style="width: 54px; height: 78px; border-radius: 10px; background: linear-gradient(145deg, #8BAA84, #6B8965); border: 1.5px solid #5F7D59; transform: rotate(-7deg) translateY(-8px); box-shadow: 0 4px 12px rgba(61,50,40,0.15); position: relative; margin-right: -14px; z-index: 2">
+          <div style="position: absolute; inset: 4px; border-radius: 7px; border: 1.5px solid rgba(255,255,255,0.13)"></div>
+          <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 16px; color: rgba(255,255,255,0.2)">✿</div>
+        </div>
+        <div style="width: 54px; height: 78px; border-radius: 10px; background: linear-gradient(145deg, #8BAA84, #6B8965); border: 1.5px solid #5F7D59; transform: rotate(7deg) translateY(-8px); box-shadow: 0 4px 12px rgba(61,50,40,0.15); position: relative; margin-right: -14px; z-index: 2">
+          <div style="position: absolute; inset: 4px; border-radius: 7px; border: 1.5px solid rgba(255,255,255,0.13)"></div>
+          <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 16px; color: rgba(255,255,255,0.2)">✿</div>
+        </div>
+        <div style="width: 54px; height: 78px; border-radius: 10px; background: linear-gradient(145deg, #8BAA84, #6B8965); border: 1.5px solid #5F7D59; transform: rotate(20deg) translateY(-2px); box-shadow: 0 4px 12px rgba(61,50,40,0.15); position: relative; z-index: 1">
+          <div style="position: absolute; inset: 4px; border-radius: 7px; border: 1.5px solid rgba(255,255,255,0.13)"></div>
+          <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 16px; color: rgba(255,255,255,0.2)">✿</div>
+        </div>
+      </div>
+      <div style="text-align: center; margin-bottom: 8px">
+        <div style="font-size: 11px; letter-spacing: 5px; color: #8B8178; font-weight: 700; text-transform: uppercase; margin-bottom: 2px">the card game</div>
+        <h1 style="font-family: Caveat, cursive; font-size: 62px; font-weight: 700; color: #5A7D4E; line-height: 1; margin: 0">Cambio</h1>
+      </div>
+      <p style="font-size: 14px; color: #8B8178; margin-bottom: 32px; text-align: center">Get the lowest score to win!</p>
+      <div style="width: 100%; background: #FDFBF7; border: 1px solid #E5DDD3; border-radius: 18px; padding: 22px; margin-bottom: 32px; box-shadow: 0 2px 12px rgba(61,50,40,0.06)">
+        <div style="font-size: 11px; letter-spacing: 3px; color: #7D9B76; font-weight: 800; margin-bottom: 16px">HOW TO PLAY</div>
+        <div style="display: flex; flex-direction: column; gap: 12px">
+          <div style="display: flex; gap: 12px; align-items: flex-start">
+            <span style="font-size: 15px; flex-shrink: 0; width: 22px; text-align: center; margin-top: 1px">🎯</span>
+            <span style="font-size: 13px; color: #6B6058; line-height: 1.6">Start with 4 face-down cards. Peek at your bottom 2, then try to get the <strong style="color: #3D3228">lowest total</strong>.</span>
+          </div>
+          <div style="display: flex; gap: 12px; align-items: flex-start">
+            <span style="font-size: 15px; flex-shrink: 0; width: 22px; text-align: center; margin-top: 1px">🃏</span>
+            <span style="font-size: 13px; color: #6B6058; line-height: 1.6">Draw a card each turn, then <strong style="color: #3D3228">swap</strong> it into your hand or <strong style="color: #3D3228">discard</strong> to use its ability.</span>
+          </div>
+          <div style="display: flex; gap: 12px; align-items: flex-start">
+            <span style="font-size: 15px; flex-shrink: 0; width: 22px; text-align: center; margin-top: 1px">⚡</span>
+            <span style="font-size: 13px; color: #6B6058; line-height: 1.6"><strong style="color: #3D3228">Stick</strong> — tap a card that matches the discard pile to remove it from your hand!</span>
+          </div>
+          <div style="display: flex; gap: 12px; align-items: flex-start">
+            <span style="font-size: 15px; flex-shrink: 0; width: 22px; text-align: center; margin-top: 1px">🔔</span>
+            <span style="font-size: 13px; color: #6B6058; line-height: 1.6">Call <strong style="color: #D4856A">Cambio</strong> when you think you're lowest — opponent gets one last turn!</span>
+          </div>
+        </div>
+        <div style="border-top: 1px solid #E5DDD3; margin-top: 16px; padding-top: 14px; display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 11px; color: #8B8178; line-height: 1.8">
+          <span><strong>A</strong> = 1</span><span><strong>2-10</strong> = face</span><span><strong>J/Q/K</strong> = 10</span><span style="color: #C05746"><strong>Red K</strong> = −1</span><span><strong>Joker</strong> = 0</span>
+        </div>
+        <div style="font-size: 11px; color: #B5AA9E; margin-top: 6px; line-height: 1.8">7/8 peek own · 9/10 peek opp · J/Q blind swap · Black K look &amp; swap</div>
+      </div>
+      <button onClick="{{ startGame }}" style="background: #7D9B76; color: white; border: none; border-radius: 50px; padding: 15px 48px; font-size: 16px; font-weight: 800; font-family: Nunito, sans-serif; cursor: pointer; letter-spacing: 1px; box-shadow: 0 4px 18px rgba(125,155,118,0.35); transition: all 0.2s ease" style-hover="background: #6B8965; transform: translateY(-2px); box-shadow: 0 6px 22px rgba(125,155,118,0.4)" style-active="transform: translateY(0px)">Deal Cards ✿</button>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isGame }}">
+    <div style="display: flex; flex-direction: column; width: 100%; max-width: 420px; padding: 0 14px; flex: 1; height: 100dvh; overflow: hidden">
+      <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 0 6px; flex-shrink: 0">
+        <div style="font-family: Caveat, cursive; font-size: 26px; font-weight: 700; color: #5A7D4E">Cambio</div>
+        <div style="font-size: 10px; font-weight: 800; letter-spacing: 2px; color: {{ phaseColor }}; background: {{ phaseBg }}; border: 1.5px solid {{ phaseBorder }}; border-radius: 20px; padding: 5px 14px">{{ phaseLabel }}</div>
+      </div>
+      <div style="background: #FDFBF7; border: 1px solid #E5DDD3; border-radius: 14px; padding: 10px 14px 12px; margin-bottom: 6px; box-shadow: 0 1px 6px rgba(61,50,40,0.04); flex-shrink: 0">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px">
+          <span style="font-size: 11px; font-weight: 800; letter-spacing: 2.5px; color: #8B8178">OPPONENT</span>
+          <span style="font-size: 11px; color: #B5AA9E; background: #F5F0E8; border-radius: 10px; padding: 3px 10px; font-weight: 600">{{ aiCardCount }} cards</span>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(2, 60px); gap: 10px; justify-content: center">
+          <sc-for list="{{ aiCards }}" as="c" hint-placeholder-count="4">
+            <div onClick="{{ c.onClick }}" style="width: 60px; height: 84px; border-radius: 12px; position: relative; cursor: {{ c.cursor }}; transform: {{ c.transform }}; transition: transform 0.2s ease, box-shadow 0.2s ease; box-shadow: {{ c.shadow }}; opacity: {{ c.opacity }}; animation: {{ c.anim }}">
+              <sc-if value="{{ c.faceUp }}">
+                <div style="position: absolute; inset: 0; border-radius: 12px; background: #FFFDF8; border: 1.5px solid #E5DDD3; overflow: hidden; animation: cardReveal 0.35s ease-out">
+                  <div style="position: absolute; top: 6px; left: 8px; line-height: 1">
+                    <div style="font-family: Nunito, sans-serif; font-size: 18px; font-weight: 900; color: {{ c.suitColor }}">{{ c.displayRank }}</div>
+                    <sc-if value="{{ c.showSuit }}"><div style="font-size: 12px; color: {{ c.suitColor }}; margin-top: -3px">{{ c.suit }}</div></sc-if>
+                  </div>
+                  <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 32px; color: {{ c.suitColor }}; line-height: 1; opacity: 0.8">{{ c.centerDisplay }}</div>
+                </div>
+              </sc-if>
+              <sc-if value="{{ c.faceDown }}">
+                <div style="position: absolute; inset: 0; border-radius: 12px; background: linear-gradient(150deg, #8BAA84, #6B8965); border: 1.5px solid #5F7D59; overflow: hidden">
+                  <div style="position: absolute; inset: 5px; border-radius: 8px; border: 1.5px solid rgba(255,255,255,0.1)"></div>
+                  <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 18px; color: rgba(255,255,255,0.18)">✿</div>
+                </div>
+              </sc-if>
+              <sc-if value="{{ c.isEmpty }}">
+                <div style="position: absolute; inset: 0; border-radius: 12px; border: 2px dashed #E5DDD3; display: flex; align-items: center; justify-content: center; color: #D5CEC4; font-size: 16px">✕</div>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="background: linear-gradient(150deg, #6B8F5E, #527545); border-radius: 14px; padding: 12px 14px; margin-bottom: 6px; border: 1px solid rgba(82,117,69,0.4); box-shadow: inset 0 1px 4px rgba(0,0,0,0.08), 0 2px 8px rgba(61,50,40,0.1); flex-shrink: 0">
+        <div style="display: flex; align-items: flex-start; justify-content: center; gap: 10px">
+          <div style="text-align: center; flex-shrink: 0">
+            <div onClick="{{ onDrawDeck }}" style="width: 60px; height: 84px; border-radius: 12px; position: relative; cursor: {{ deckCursor }}; opacity: {{ deckOpacity }}; transition: all 0.2s; animation: {{ deckAnim }}">
+              <div style="position: absolute; inset: 0; border-radius: 12px; background: #4A6B42; transform: translateY(3px) translateX(1.5px)"></div>
+              <div style="position: absolute; inset: 0; border-radius: 12px; background: #5A7D52; transform: translateY(1.5px) translateX(0.75px)"></div>
+              <div style="position: absolute; inset: 0; border-radius: 12px; background: linear-gradient(150deg, #8BAA84, #6B8965); border: 1.5px solid #5F7D59; overflow: hidden; z-index: 1">
+                <div style="position: absolute; inset: 5px; border-radius: 8px; border: 1.5px solid rgba(255,255,255,0.1)"></div>
+                <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 18px; color: rgba(255,255,255,0.18)">✿</div>
+              </div>
+            </div>
+            <div style="font-size: 10px; color: rgba(255,255,255,0.55); margin-top: 4px; font-weight: 700">Deck · {{ deckCount }}</div>
+          </div>
+          <div style="text-align: center; flex-shrink: 0">
+            <div onClick="{{ onDrawDiscard }}" style="width: 60px; height: 84px; border-radius: 12px; position: relative; cursor: {{ discardCursor }}; transition: all 0.2s; box-shadow: {{ discardShadow }}; animation: {{ discardCardAnim }}">
+              <sc-if value="{{ hasDiscard }}">
+                <div style="position: absolute; inset: 0; border-radius: 12px; background: #FFFDF8; border: 1.5px solid rgba(0,0,0,0.08); overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.12)">
+                  <div style="position: absolute; top: 6px; left: 8px; line-height: 1">
+                    <div style="font-family: Nunito, sans-serif; font-size: 18px; font-weight: 900; color: {{ discardColor }}">{{ discardRank }}</div>
+                    <sc-if value="{{ discardShowSuit }}"><div style="font-size: 12px; color: {{ discardColor }}; margin-top: -3px">{{ discardSuit }}</div></sc-if>
+                  </div>
+                  <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 32px; color: {{ discardColor }}; line-height: 1; opacity: 0.8">{{ discardCenter }}</div>
+                </div>
+              </sc-if>
+              <sc-if value="{{ noDiscard }}">
+                <div style="position: absolute; inset: 0; border-radius: 12px; border: 2px dashed rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center">
+                  <span style="font-size: 9px; color: rgba(255,255,255,0.3); letter-spacing: 1px; font-weight: 700">DISCARD</span>
+                </div>
+              </sc-if>
+            </div>
+            <div style="font-size: 10px; color: rgba(255,255,255,0.55); margin-top: 4px; font-weight: 700">Discard</div>
+          </div>
+          <sc-if value="{{ hasDrawnCard }}">
+            <div style="text-align: center; flex-shrink: 0; animation: fadeSlideUp 0.3s ease-out">
+              <div style="width: 60px; height: 84px; border-radius: 12px; position: relative; transform: translateY(-4px)">
+                <div style="position: absolute; inset: 0; border-radius: 12px; background: #FFFDF8; border: 2px solid #D4856A; overflow: hidden; box-shadow: 0 6px 20px rgba(212,133,106,0.3)">
+                  <div style="position: absolute; top: 6px; left: 8px; line-height: 1">
+                    <div style="font-family: Nunito, sans-serif; font-size: 18px; font-weight: 900; color: {{ drawnColor }}">{{ drawnRank }}</div>
+                    <sc-if value="{{ drawnShowSuit }}"><div style="font-size: 12px; color: {{ drawnColor }}; margin-top: -3px">{{ drawnSuit }}</div></sc-if>
+                  </div>
+                  <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 32px; color: {{ drawnColor }}; line-height: 1; opacity: 0.8">{{ drawnCenter }}</div>
+                </div>
+              </div>
+              <sc-if value="{{ drawnAbilityLabel }}">
+                <div style="font-size: 9px; font-weight: 800; letter-spacing: 0.5px; color: #5A7D4E; background: rgba(125,155,118,0.15); border: 1px solid rgba(125,155,118,0.25); border-radius: 8px; padding: 3px 8px; margin-top: 6px; display: inline-block">{{ drawnAbilityLabel }}</div>
+              </sc-if>
+              <div style="font-size: 9px; color: #D4856A; margin-top: 3px; font-weight: 800; letter-spacing: 1.5px">DRAWN</div>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+      <div style="background: #FDFBF7; border: 1.5px solid #E5DDD3; border-radius: 12px; padding: 8px 14px; text-align: center; font-size: 13px; color: #3D3228; font-weight: 700; margin-bottom: 6px; line-height: 1.4; box-shadow: 0 2px 10px rgba(61,50,40,0.06); flex-shrink: 0">{{ message }}</div>
+      <sc-if value="{{ hasActions }}">
+        <div style="display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; flex-shrink: 0">
+          <sc-for list="{{ actions }}" as="a" hint-placeholder-count="1">
+            <button onClick="{{ a.onClick }}" style="border: none; border-radius: 50px; font-weight: 800; font-size: 13px; cursor: pointer; letter-spacing: 0.5px; padding: 10px 24px; font-family: Nunito, sans-serif; transition: all 0.2s ease; background: {{ a.bg }}; color: {{ a.fg }}; box-shadow: {{ a.shadow }}" style-hover="transform: translateY(-1px)" style-active="transform: translateY(0)">{{ a.label }}</button>
+          </sc-for>
+        </div>
+      </sc-if>
+      <div style="flex: 1; min-height: 4px"></div>
+      <div style="background: #FDFBF7; border: 1.5px solid #E5DDD3; border-radius: 14px; padding: 10px 14px 12px; margin-bottom: 8px; box-shadow: 0 1px 6px rgba(61,50,40,0.04); flex-shrink: 0">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px">
+          <span style="font-size: 11px; font-weight: 800; letter-spacing: 2.5px; color: #7D9B76">YOU</span>
+          <span style="font-size: 11px; color: #B5AA9E; background: #F5F0E8; border-radius: 10px; padding: 3px 10px; font-weight: 600">{{ playerCardCount }} cards</span>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(2, 60px); gap: 10px; justify-content: center">
+          <sc-for list="{{ playerCards }}" as="c" hint-placeholder-count="4">
+            <div onClick="{{ c.onClick }}" style="width: 60px; height: 84px; border-radius: 12px; position: relative; cursor: {{ c.cursor }}; transform: {{ c.transform }}; transition: transform 0.2s ease, box-shadow 0.2s ease; box-shadow: {{ c.shadow }}; opacity: {{ c.opacity }}; animation: {{ c.anim }}">
+              <sc-if value="{{ c.faceUp }}">
+                <div style="position: absolute; inset: 0; border-radius: 12px; background: #FFFDF8; border: 1.5px solid #E5DDD3; overflow: hidden; animation: cardReveal 0.35s ease-out">
+                  <div style="position: absolute; top: 6px; left: 8px; line-height: 1">
+                    <div style="font-family: Nunito, sans-serif; font-size: 18px; font-weight: 900; color: {{ c.suitColor }}">{{ c.displayRank }}</div>
+                    <sc-if value="{{ c.showSuit }}"><div style="font-size: 12px; color: {{ c.suitColor }}; margin-top: -3px">{{ c.suit }}</div></sc-if>
+                  </div>
+                  <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 32px; color: {{ c.suitColor }}; line-height: 1; opacity: 0.8">{{ c.centerDisplay }}</div>
+                </div>
+              </sc-if>
+              <sc-if value="{{ c.faceDown }}">
+                <div style="position: absolute; inset: 0; border-radius: 12px; background: linear-gradient(150deg, #8BAA84, #6B8965); border: 1.5px solid #5F7D59; overflow: hidden">
+                  <div style="position: absolute; inset: 5px; border-radius: 8px; border: 1.5px solid rgba(255,255,255,0.1)"></div>
+                  <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 18px; color: rgba(255,255,255,0.18)">✿</div>
+                </div>
+              </sc-if>
+              <sc-if value="{{ c.isEmpty }}">
+                <div style="position: absolute; inset: 0; border-radius: 12px; border: 2px dashed #E5DDD3; display: flex; align-items: center; justify-content: center; color: #D5CEC4; font-size: 16px">✕</div>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isReveal }}">
+    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100dvh; width: 100%; max-width: 420px; padding: 20px 16px; overflow: auto">
+      <div style="text-align: center; margin-bottom: 32px; animation: pop 0.5s ease-out">
+        <div style="font-size: 56px; margin-bottom: 10px">{{ resultEmoji }}</div>
+        <div style="font-family: Caveat, cursive; font-size: 36px; font-weight: 700; color: {{ resultColor }}">{{ resultText }}</div>
+      </div>
+      <div style="display: flex; gap: 14px; width: 100%; margin-bottom: 32px">
+        <div style="flex: 1; background: {{ oppScoreBg }}; border: 1.5px solid {{ oppScoreBorder }}; border-radius: 16px; padding: 16px 12px; text-align: center">
+          <div style="font-size: 10px; color: #8B8178; letter-spacing: 2px; font-weight: 800; margin-bottom: 8px">OPPONENT</div>
+          <div style="font-family: Caveat, cursive; font-size: 40px; font-weight: 700; color: {{ oppScoreColor }}; line-height: 1">{{ aiScore }}</div>
+          <div style="font-size: 11px; color: #B5AA9E; margin-top: 4px; font-weight: 600">pts</div>
+        </div>
+        <div style="flex: 1; background: {{ yourScoreBg }}; border: 1.5px solid {{ yourScoreBorder }}; border-radius: 16px; padding: 16px 12px; text-align: center">
+          <div style="font-size: 10px; color: #8B8178; letter-spacing: 2px; font-weight: 800; margin-bottom: 8px">YOU</div>
+          <div style="font-family: Caveat, cursive; font-size: 40px; font-weight: 700; color: {{ yourScoreColor }}; line-height: 1">{{ playerScore }}</div>
+          <div style="font-size: 11px; color: #B5AA9E; margin-top: 4px; font-weight: 600">pts</div>
+        </div>
+      </div>
+      <div style="width: 100%; margin-bottom: 20px">
+        <div style="font-size: 10px; letter-spacing: 3px; color: #8B8178; font-weight: 800; margin-bottom: 10px; text-align: center">OPPONENT'S HAND</div>
+        <div style="display: grid; grid-template-columns: repeat(2, 60px); gap: 10px; justify-content: center">
+          <sc-for list="{{ revealAiCards }}" as="c" hint-placeholder-count="4">
+            <div style="width: 60px; height: 84px; border-radius: 12px; position: relative; box-shadow: 0 2px 10px rgba(61,50,40,0.1)">
+              <sc-if value="{{ c.hasCard }}">
+                <div style="position: absolute; inset: 0; border-radius: 12px; background: #FFFDF8; border: 1.5px solid #E5DDD3; overflow: hidden">
+                  <div style="position: absolute; top: 6px; left: 8px; line-height: 1">
+                    <div style="font-family: Nunito, sans-serif; font-size: 18px; font-weight: 900; color: {{ c.suitColor }}">{{ c.displayRank }}</div>
+                    <sc-if value="{{ c.showSuit }}"><div style="font-size: 12px; color: {{ c.suitColor }}; margin-top: -3px">{{ c.suit }}</div></sc-if>
+                  </div>
+                  <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 32px; color: {{ c.suitColor }}; line-height: 1; opacity: 0.8">{{ c.centerDisplay }}</div>
+                </div>
+              </sc-if>
+              <sc-if value="{{ c.isEmpty }}">
+                <div style="position: absolute; inset: 0; border-radius: 12px; border: 2px dashed #E5DDD3"></div>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="width: 100%; margin-bottom: 36px">
+        <div style="font-size: 10px; letter-spacing: 3px; color: #7D9B76; font-weight: 800; margin-bottom: 10px; text-align: center">YOUR HAND</div>
+        <div style="display: grid; grid-template-columns: repeat(2, 60px); gap: 10px; justify-content: center">
+          <sc-for list="{{ revealPlayerCards }}" as="c" hint-placeholder-count="4">
+            <div style="width: 60px; height: 84px; border-radius: 12px; position: relative; box-shadow: 0 2px 10px rgba(61,50,40,0.1)">
+              <sc-if value="{{ c.hasCard }}">
+                <div style="position: absolute; inset: 0; border-radius: 12px; background: #FFFDF8; border: 1.5px solid #E5DDD3; overflow: hidden">
+                  <div style="position: absolute; top: 6px; left: 8px; line-height: 1">
+                    <div style="font-family: Nunito, sans-serif; font-size: 18px; font-weight: 900; color: {{ c.suitColor }}">{{ c.displayRank }}</div>
+                    <sc-if value="{{ c.showSuit }}"><div style="font-size: 12px; color: {{ c.suitColor }}; margin-top: -3px">{{ c.suit }}</div></sc-if>
+                  </div>
+                  <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 32px; color: {{ c.suitColor }}; line-height: 1; opacity: 0.8">{{ c.centerDisplay }}</div>
+                </div>
+              </sc-if>
+              <sc-if value="{{ c.isEmpty }}">
+                <div style="position: absolute; inset: 0; border-radius: 12px; border: 2px dashed #E5DDD3"></div>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <button onClick="{{ startGame }}" style="background: #7D9B76; color: white; border: none; border-radius: 50px; padding: 15px 48px; font-size: 16px; font-weight: 800; font-family: Nunito, sans-serif; cursor: pointer; letter-spacing: 1px; box-shadow: 0 4px 18px rgba(125,155,118,0.35); transition: all 0.2s ease" style-hover="background: #6B8965; transform: translateY(-2px)" style-active="transform: translateY(0px)">Play Again ✿</button>
+    </div>
+  </sc-if>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: { &quot;width&quot;: &quot;420px&quot;, &quot;height&quot;: &quot;100%&quot; },
+  &quot;aiSpeed&quot;: { &quot;editor&quot;: &quot;enum&quot;, &quot;options&quot;: [&quot;Slow&quot;, &quot;Normal&quot;, &quot;Fast&quot;], &quot;default&quot;: &quot;Normal&quot; }
+}">
+
+class Component extends DCLogic {
+  state = {
+    phase: 'setup', deck: [], discard: [], playerHand: [], aiHand: [],
+    playerKnown: [], aiKnown: {}, drawnCard: null, drawnFrom: null,
+    message: '', peeksLeft: 2, cambioCaller: null,
+    abilityMode: null, abilityStep: 0, tempReveal: [],
+    scores: null, swapSource: null, stickMode: false, stickTarget: null,
+    roundNum: 0, messageKey: 0, aiAnimIdx: -1, aiAnimPhase: null, discardAnim: false,
+  };
+  _cambioCaller = null;
+  _timers = [];
+  componentWillUnmount() { this._timers.forEach(t => clearTimeout(t)); }
+  _delay(fn, ms) { const id = setTimeout(() => { this._timers = this._timers.filter(t => t !== id); fn(); }, ms); this._timers.push(id); return id; }
+  _clearTimers() { this._timers.forEach(t => clearTimeout(t)); this._timers = []; }
+  _msg(text) { this.setState(s => ({ message: text, messageKey: s.messageKey + 1 })); }
+  get _aiMs() { const sp = this.props.aiSpeed ?? 'Normal'; return sp === 'Slow' ? 3500 : sp === 'Fast' ? 1200 : 2200; }
+  _val(card) { if (!card) return 0; if (card.isJoker) return 0; if (card.rank === 'A') return 1; if (card.rank === 'K' && (card.suit === '♥' || card.suit === '♦')) return -1; if (['K','Q','J'].includes(card.rank)) return 10; return parseInt(card.rank); }
+  _color(card) { if (!card) return '#3D3228'; if (card.isJoker) return '#8E7B93'; return (card.suit === '♥' || card.suit === '♦') ? '#C05746' : '#3D3228'; }
+  _label(card) { if (!card) return ''; if (card.isJoker) return '🃏'; return card.rank + card.suit; }
+  _ability(card) { if (!card || card.isJoker) return null; if (['7','8'].includes(card.rank)) return 'peek_own'; if (['9','10'].includes(card.rank)) return 'peek_other'; if (['J','Q'].includes(card.rank)) return 'blind_swap'; if (card.rank === 'K' && (card.suit === '♠' || card.suit === '♣')) return 'king_swap'; return null; }
+  _buildDeck() { const suits = ['♠','♥','♦','♣']; const ranks = ['A','2','3','4','5','6','7','8','9','10','J','Q','K']; const deck = []; for (const s of suits) for (const r of ranks) deck.push({ rank: r, suit: s, isJoker: false, id: r + s }); deck.push({ isJoker: true, id: 'JK1', rank: 'JK', suit: '' }); deck.push({ isJoker: true, id: 'JK2', rank: 'JK', suit: '' }); return deck; }
+  _shuffle(arr) { const a = [...arr]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+  _reshuffleIfNeeded(dk, dc) { if (dk.length > 0) return { deck: dk, discard: dc }; if (dc.length <= 1) return { deck: dk, discard: dc }; const top = dc[dc.length - 1]; return { deck: this._shuffle(dc.slice(0, -1)), discard: [top] }; }
+  _isBottomRow(idx, len) { const row = Math.floor(idx / 2); const totalRows = Math.ceil(len / 2); return row === totalRows - 1; }
+
+  startGame() {
+    this._clearTimers(); this._cambioCaller = null;
+    const d = this._shuffle(this._buildDeck()); const pH = d.splice(0, 4); const aH = d.splice(0, 4); const disc = [];
+    const ak = {}; ak['2'] = aH[2]; ak['3'] = aH[3];
+    this.setState({ phase: 'peek', deck: d, discard: disc, playerHand: pH, aiHand: aH, playerKnown: [], aiKnown: ak, drawnCard: null, drawnFrom: null, message: 'Tap your 2 bottom cards to sneak a peek! 👀', peeksLeft: 2, cambioCaller: null, abilityMode: null, abilityStep: 0, tempReveal: [], scores: null, swapSource: null, stickMode: false, stickTarget: null, roundNum: 0, messageKey: 0, aiAnimIdx: -1, aiAnimPhase: null });
+  }
+
+  handlePeek(idx) {
+    const s = this.state; if (s.phase !== 'peek' || s.peeksLeft <= 0) return;
+    if (!this._isBottomRow(idx, s.playerHand.length)) { this._msg('Only bottom cards! Tap the bottom row 👇'); return; }
+    if (s.tempReveal.includes('p' + idx)) return;
+    const tr = [...s.tempReveal, 'p' + idx]; const pk = [...s.playerKnown]; if (!pk.includes(idx)) pk.push(idx);
+    const left = s.peeksLeft - 1;
+    if (left === 0) { this.setState({ tempReveal: tr, playerKnown: pk, peeksLeft: 0, message: 'Memorize them! Hiding soon... 🧠' }); this._delay(() => { this.setState({ tempReveal: [], phase: 'draw', message: 'Your turn — tap the deck or discard pile to draw' }); }, 4000); }
+    else { this.setState({ tempReveal: tr, playerKnown: pk, peeksLeft: left, message: 'Nice! Peek at 1 more bottom card 👀' }); }
+  }
+
+  drawFromDeck() { const s = this.state; if (s.phase !== 'draw') return; const { deck: dk, discard: dc } = this._reshuffleIfNeeded(s.deck, s.discard); if (dk.length === 0) return; const nd = [...dk]; const card = nd.pop(); this.setState({ deck: nd, discard: dc, drawnCard: card, drawnFrom: 'deck', stickMode: false, phase: 'drawn', message: 'Tap one of your cards to swap, or discard it' }); }
+  drawFromDiscard() { const s = this.state; if (s.phase !== 'draw' || s.discard.length === 0) return; const nd = [...s.discard]; const card = nd.pop(); this.setState({ discard: nd, drawnCard: card, drawnFrom: 'discard', stickMode: false, phase: 'drawn', message: 'Pick one of your cards to swap with this one' }); }
+
+  swapWithOwn(idx) { const s = this.state; if (s.phase !== 'drawn') return; const nh = [...s.playerHand]; const old = nh[idx]; nh[idx] = s.drawnCard; const pk = [...s.playerKnown]; if (!pk.includes(idx)) pk.push(idx); this.setState({ playerHand: nh, discard: [...s.discard, old], drawnCard: null, drawnFrom: null, playerKnown: pk, abilityMode: null }); this._delay(() => this.endPlayerTurn(), 80); }
+
+  discardDrawn() {
+    const s = this.state; if (s.phase !== 'drawn' || s.drawnFrom === 'discard') return;
+    const ab = this._ability(s.drawnCard); this.setState({ discard: [...s.discard, s.drawnCard], drawnCard: null, drawnFrom: null });
+    if (ab) { const msgs = { peek_own: 'Pick one of YOUR cards to peek at 👀', peek_other: "Pick one of OPPONENT's cards to peek at 🔍", blind_swap: 'Pick one of YOUR cards first 🔄', king_swap: 'Pick any card to look at 👑' }; this.setState({ abilityMode: ab, abilityStep: 0, swapSource: null, phase: 'ability', message: msgs[ab] }); }
+    else { this.endPlayerTurn(); }
+  }
+
+  skipAbility() { this.setState({ abilityMode: null, tempReveal: [] }); this.endPlayerTurn(); }
+
+  skipAndDiscard() { const s = this.state; if (s.phase !== 'drawn' || s.drawnFrom !== 'deck') return; this.setState({ discard: [...s.discard, s.drawnCard], drawnCard: null, drawnFrom: null, abilityMode: null }); this.endPlayerTurn(); }
+
+  handleAbility(owner, idx) {
+    const s = this.state; if (s.phase !== 'ability') return; const isP = owner === 'player';
+    if (s.abilityMode === 'peek_own') { if (!isP) return; const pk = [...s.playerKnown]; if (!pk.includes(idx)) pk.push(idx); this.setState({ tempReveal: ['p' + idx], playerKnown: pk, message: 'Card ' + (idx+1) + ': ' + this._label(s.playerHand[idx]) + '. Memorize it! 🧠' }); this._delay(() => { this.setState({ tempReveal: [], abilityMode: null }); this.endPlayerTurn(); }, 3000); }
+    else if (s.abilityMode === 'peek_other') { if (isP) return; this.setState({ tempReveal: ['a' + idx], message: "Opponent card " + (idx+1) + ": " + this._label(s.aiHand[idx]) + ". Memorize it! 🧠" }); this._delay(() => { this.setState({ tempReveal: [], abilityMode: null }); this.endPlayerTurn(); }, 3000); }
+    else if (s.abilityMode === 'blind_swap') {
+      if (!s.swapSource) { if (!isP) return; this.setState({ swapSource: { owner: 'player', idx }, message: "Now pick one of OPPONENT's cards to swap with 🔄" }); }
+      else { if (isP) return; const ph = [...s.playerHand]; const ah = [...s.aiHand]; const tmp = ph[s.swapSource.idx]; ph[s.swapSource.idx] = ah[idx]; ah[idx] = tmp; const pk = s.playerKnown.filter(k => k !== s.swapSource.idx); const ak = { ...s.aiKnown }; delete ak[String(idx)]; this.setState({ playerHand: ph, aiHand: ah, playerKnown: pk, aiKnown: ak, message: 'Blind swap done! 🔄', swapSource: null, abilityMode: null }); this._delay(() => this.endPlayerTurn(), 1200); }
+    } else if (s.abilityMode === 'king_swap') {
+      if (s.abilityStep === 0) { const card = isP ? s.playerHand[idx] : s.aiHand[idx]; const pk = [...s.playerKnown]; if (isP && !pk.includes(idx)) pk.push(idx); this.setState({ tempReveal: [(isP ? 'p' : 'a') + idx], message: "That's " + this._label(card) + ". Pick another to swap, or skip 👑", swapSource: { owner, idx }, abilityStep: 1, playerKnown: pk }); }
+      else { const src = s.swapSource; const ph = [...s.playerHand]; const ah = [...s.aiHand]; const g = (o, i) => o === 'player' ? ph[i] : ah[i]; const se = (o, i, c) => { if (o === 'player') ph[i] = c; else ah[i] = c; }; const c1 = g(src.owner, src.idx); const c2 = g(owner, idx); se(src.owner, src.idx, c2); se(owner, idx, c1); const ak = { ...s.aiKnown }; if (src.owner === 'ai') delete ak[String(src.idx)]; if (owner === 'ai') delete ak[String(idx)]; this.setState({ playerHand: ph, aiHand: ah, aiKnown: ak, message: 'King swap done! 👑', swapSource: null, abilityMode: null, tempReveal: [] }); this._delay(() => this.endPlayerTurn(), 1200); }
+    }
+  }
+
+  handleStick(owner, idx) {
+    const s = this.state; if (s.discard.length === 0) return;
+    const top = s.discard[s.discard.length - 1]; const card = owner === 'player' ? s.playerHand[idx] : s.aiHand[idx]; if (!card) return;
+    if (card.rank !== top.rank) { if (s.deck.length > 0) { const nd = [...s.deck]; const pen = nd.pop(); const nh = [...s.playerHand]; const ei = nh.findIndex(c => c === null); if (ei >= 0) nh[ei] = pen; else nh.push(pen); this.setState({ deck: nd, playerHand: nh, message: 'Wrong match! Penalty card added 😬', stickMode: false, stickTarget: null }); } return; }
+    if (owner === 'player') { const nh = [...s.playerHand]; nh[idx] = null; this.setState({ playerHand: nh, discard: [...s.discard, card], playerKnown: s.playerKnown.filter(k => k !== idx), stickMode: false, stickTarget: null, message: 'Nice stick! Card removed! 🎯' }); }
+    else { if (s.phase === 'ai_turn') this._clearTimers(); const ah = [...s.aiHand]; ah[idx] = null; const ak = { ...s.aiKnown }; delete ak[String(idx)]; this.setState({ aiHand: ah, discard: [...s.discard, card], aiKnown: ak, stickTarget: { owner: 'ai', idx }, stickMode: 'swap', message: "Nice stick on opponent! Pick YOUR card to give them 🎯" }); }
+  }
+
+  handleStickSwap(pIdx) { const s = this.state; if (!s.playerHand[pIdx]) return; if (!s.stickTarget) { this.setState({ stickMode: false }); return; } const card = s.playerHand[pIdx]; const tIdx = s.stickTarget.idx; const nh = [...s.playerHand]; nh[pIdx] = null; const ah = [...s.aiHand]; ah[tIdx] = card; const wasAiTurn = s.phase === 'ai_turn'; this.setState({ playerHand: nh, aiHand: ah, playerKnown: s.playerKnown.filter(k => k !== pIdx), stickMode: false, stickTarget: null, message: 'Card given to opponent! 🎯' }); if (wasAiTurn) { this._delay(() => this.doAiTurn(), this._aiMs); } }
+
+  _canStick() { const s = this.state; return (s.phase === 'draw' || s.phase === 'ai_turn' || s.phase === 'final_stick') && !s.stickMode && s.discard.length > 0 && s.cambioCaller !== 'player'; }
+
+  endPlayerTurn() {
+    this.setState({ stickMode: false, stickTarget: null });
+    if (this._cambioCaller === 'player') { this.doReveal(); return; }
+    if (this._cambioCaller === 'ai') { this.setState({ phase: 'final_stick', message: 'Last chance to stick a card, or tap End Turn' }); return; }
+    this.setState({ phase: 'ai_turn', message: 'Opponent is thinking... 🤔' }); this._delay(() => this.doAiTurn(), this._aiMs);
+  }
+
+  doAiTurn() {
+    const s = this.state;
+    if (s.stickMode) return;
+    if (s.phase !== 'ai_turn') return;
+    if (s.discard.length > 0) {
+      const topD = s.discard[s.discard.length - 1];
+      for (const idxS of Object.keys(s.aiKnown)) { const i = parseInt(idxS); if (i < s.aiHand.length && s.aiHand[i] && s.aiKnown[idxS].rank === topD.rank) { const ah = [...s.aiHand]; const stuck = ah[i]; ah[i] = null; const ak = { ...s.aiKnown }; delete ak[idxS]; this.setState({ aiHand: ah, discard: [...s.discard, stuck], aiKnown: ak, message: 'Opponent stuck a card! 😤' }); this._delay(() => { if (this._cambioCaller) { this.doReveal(); return; } this.setState({ phase: 'draw', message: 'Your turn — tap the deck or discard pile to draw' }); }, 1500); return; } }
+    }
+    const { deck: fDeck, discard: fDisc } = this._reshuffleIfNeeded(s.deck, s.discard);
+    if (fDeck.length === 0) { this.doReveal(); return; }
+    const nd = [...fDeck]; const card = nd.pop(); const dec = this._aiDecision(s.aiHand, s.aiKnown, card);
+    if (dec.action === 'swap') {
+      this.setState({ deck: nd, discard: fDisc, aiAnimIdx: dec.idx, aiAnimPhase: 'out', message: 'Opponent swapped a card' });
+      this._delay(() => { const cs = this.state; const ah = [...cs.aiHand]; const old = ah[dec.idx]; ah[dec.idx] = card; const ak = { ...cs.aiKnown }; ak[String(dec.idx)] = card; this.setState({ discard: [...cs.discard, old], aiHand: ah, aiKnown: ak, aiAnimIdx: dec.idx, aiAnimPhase: 'in' }); this._delay(() => { this.setState({ aiAnimIdx: -1, aiAnimPhase: null }); this._afterAiAction(); }, 420); }, 380);
+      return;
+    }
+    if (dec.action === 'use_ability') { const ak = { ...s.aiKnown }; if (dec.ability === 'peek_own') ak[String(dec.target)] = s.aiHand[dec.target]; this.setState({ deck: nd, discard: [...fDisc, card], aiKnown: ak, message: 'Opponent used an ability', discardAnim: true }); this._delay(() => this.setState({ discardAnim: false }), 500); }
+    else { this.setState({ deck: nd, discard: [...fDisc, card], message: 'Opponent discarded', discardAnim: true }); this._delay(() => this.setState({ discardAnim: false }), 500); }
+    this._afterAiAction();
+  }
+
+  _afterAiAction() {
+    if (this._cambioCaller) { this._msg('Revealing all cards... ✨'); this._delay(() => this.doReveal(), 2000); return; }
+    const s = this.state; const rn = s.roundNum + 1; this.setState({ roundNum: rn });
+    let kT = 0, kC = 0; const active = s.aiHand.filter(c => c !== null).length;
+    for (const is of Object.keys(s.aiKnown)) { const i = parseInt(is); if (i < s.aiHand.length && s.aiHand[i]) { kT += this._val(s.aiKnown[is]); kC++; } }
+    const est = kT + ((active - kC) * 5.5);
+    const shouldCall = (kC >= 3 && kT <= 4) || (kC >= active && kT <= 8) || (rn >= 3 && kC >= 2 && est <= 10) || (rn >= 5 && kC >= 2 && kT <= 6) || (rn >= 8 && est <= 15);
+    if (shouldCall && active <= 4) { this._cambioCaller = 'ai'; this.setState({ cambioCaller: 'ai', message: 'Opponent calls CAMBIO! You get one final turn! 🔔' }); this._delay(() => this.setState({ phase: 'draw', message: 'FINAL TURN — draw from deck or discard!' }), 2500); return; }
+    this._delay(() => { this.setState({ tempReveal: [], phase: 'draw', message: 'Your turn — tap the deck or discard pile to draw' }); }, 2000);
+  }
+
+  _aiDecision(aiH, aiK, drawn) { const dv = this._val(drawn); let wIdx = -1, wVal = -2; for (const is of Object.keys(aiK)) { const i = parseInt(is); if (i >= aiH.length || !aiH[i]) continue; const v = this._val(aiK[is]); if (v > wVal) { wVal = v; wIdx = i; } } if (wIdx >= 0 && dv < wVal) return { action: 'swap', idx: wIdx }; const unk = []; for (let i = 0; i < aiH.length; i++) { if (aiH[i] && !(String(i) in aiK)) unk.push(i); } if (dv <= 3 && unk.length > 0) return { action: 'swap', idx: unk[0] }; const ab = this._ability(drawn); if (ab === 'peek_own' && unk.length > 0) return { action: 'use_ability', ability: ab, target: unk[0] }; return { action: 'discard' }; }
+
+  callCambio() { const s = this.state; if (s.phase !== 'draw' || s.cambioCaller) return; this._cambioCaller = 'player'; this.setState({ cambioCaller: 'player', message: "You called CAMBIO! Opponent gets one last turn... 🔔", phase: 'ai_turn' }); this._delay(() => this.doAiTurn(), this._aiMs); }
+
+  doReveal() { const s = this.state; const pS = s.playerHand.reduce((a, c) => c ? a + this._val(c) : a, 0); const aS = s.aiHand.reduce((a, c) => c ? a + this._val(c) : a, 0); let w; if (pS < aS) w = 'player'; else if (aS < pS) w = 'ai'; else w = this._cambioCaller === 'player' ? 'ai' : 'player'; this.setState({ phase: 'reveal', scores: { player: pS, ai: aS, winner: w } }); }
+
+  _handleClick(owner, idx) { const s = this.state; const isP = owner === 'player'; if (s.phase === 'peek' && isP) this.handlePeek(idx); else if (s.phase === 'drawn' && isP) this.swapWithOwn(idx); else if (s.phase === 'ability') this.handleAbility(owner, idx); else if (s.stickMode === 'swap' && isP) this.handleStickSwap(idx); else if (this._canStick()) this.handleStick(owner, idx); }
+
+  renderVals() {
+    const s = this.state; const isSetup = s.phase === 'setup'; const isReveal = s.phase === 'reveal' && !!s.scores; const isGame = !isSetup && !isReveal;
+    const isTR = (o, i) => s.tempReveal.includes((o === 'player' ? 'p' : 'a') + i);
+    const mkCard = (card, owner, idx, hand) => {
+      const empty = !card; const isP = owner === 'player'; const faceUp = s.phase === 'reveal' || isTR(owner, idx); const faceDown = !empty && !faceUp;
+      let sel = false, dim = false; const stickOk = this._canStick();
+      if (s.phase === 'peek' && isP) { const bot = this._isBottomRow(idx, hand.length); sel = bot && !s.tempReveal.includes('p' + idx); dim = !bot; }
+      else if (s.phase === 'drawn' && isP) { sel = true; }
+      else if (s.phase === 'ability') { if (s.abilityMode === 'peek_own') sel = isP; else if (s.abilityMode === 'peek_other') sel = !isP; else if (s.abilityMode === 'blind_swap') sel = !s.swapSource ? isP : !isP; else if (s.abilityMode === 'king_swap') sel = true; }
+      else if (s.stickMode === 'swap' && isP) { sel = true; } else if (stickOk) { sel = true; }
+      const hl = s.swapSource && s.swapSource.owner === owner && s.swapSource.idx === idx;
+      return {
+        isEmpty: empty, faceUp, faceDown, displayRank: card && card.isJoker ? '🃏' : (card ? card.rank : ''), suit: card ? card.suit : '', showSuit: card ? !card.isJoker : false, centerDisplay: card && card.isJoker ? '🃏' : (card ? card.suit : ''), suitColor: this._color(card),
+        cursor: sel && !empty ? 'pointer' : 'default',
+        transform: (!isP && s.aiAnimIdx === idx) ? 'none' : (hl ? 'translateY(-6px) scale(1.06)' : sel ? 'translateY(-2px)' : 'none'),
+        shadow: hl ? '0 8px 24px rgba(212,133,106,0.3), 0 0 0 2px #D4856A' : sel ? '0 4px 16px rgba(61,50,40,0.12), 0 0 0 1.5px rgba(212,133,106,0.35)' : '0 2px 8px rgba(61,50,40,0.08)',
+        opacity: dim ? '0.3' : '1',
+        anim: (!isP && s.aiAnimIdx === idx) ? (s.aiAnimPhase === 'out' ? 'aiCardOut 0.35s ease-in forwards' : 'aiCardIn 0.4s ease-out') : 'none',
+        onClick: () => this._handleClick(owner, idx),
+      };
+    };
+    const playerCards = s.playerHand.map((c, i) => mkCard(c, 'player', i, s.playerHand));
+    const aiCards = s.aiHand.map((c, i) => mkCard(c, 'ai', i, s.aiHand));
+    const actions = [];
+    if (s.phase === 'drawn' && s.drawnFrom === 'deck') { const ab = this._ability(s.drawnCard); if (ab) { const abNames = { peek_own: 'Peek Own', peek_other: 'Peek Opp', blind_swap: 'Blind Swap', king_swap: 'Look & Swap' }; actions.push({ label: 'Use Ability ✨', onClick: () => this.discardDrawn(), bg: '#5A7D4E', fg: 'white', shadow: '0 4px 16px rgba(90,125,78,0.35)' }); actions.push({ label: 'Skip Ability', onClick: () => this.skipAndDiscard(), bg: '#FDFBF7', fg: '#8B8178', shadow: '0 2px 10px rgba(61,50,40,0.08), inset 0 0 0 1.5px #E5DDD3' }); } else { actions.push({ label: 'Discard', onClick: () => this.discardDrawn(), bg: '#FDFBF7', fg: '#3D3228', shadow: '0 2px 10px rgba(61,50,40,0.08), inset 0 0 0 1.5px #E5DDD3' }); } }
+    if (s.phase === 'ability') { actions.push({ label: 'Skip Ability', onClick: () => this.skipAbility(), bg: '#FDFBF7', fg: '#8B8178', shadow: '0 2px 10px rgba(61,50,40,0.08), inset 0 0 0 1.5px #E5DDD3' }); }
+    if (s.phase === 'draw' && !s.cambioCaller) { actions.push({ label: '🔔 Call CAMBIO', onClick: () => this.callCambio(), bg: '#D4856A', fg: 'white', shadow: '0 4px 18px rgba(212,133,106,0.35)' }); }
+    if (s.phase === 'final_stick') { actions.push({ label: 'End Turn', onClick: () => this.doReveal(), bg: '#7D9B76', fg: 'white', shadow: '0 4px 18px rgba(125,155,118,0.35)' }); }
+    if (s.stickMode === 'swap') { actions.push({ label: 'Cancel Stick', onClick: () => this.setState({ stickMode: false, stickTarget: null }), bg: '#C05746', fg: 'white', shadow: '0 4px 16px rgba(192,87,70,0.3)' }); }
+    const phLbls = { peek: 'PEEK PHASE', draw: 'YOUR TURN', drawn: 'SWAP OR DISCARD', ability: 'USE ABILITY', ai_turn: "OPPONENT'S TURN", final_stick: 'LAST CHANCE' };
+    const phaseLabel = s.cambioCaller ? (s.cambioCaller === 'player' ? 'FINAL ROUND' : 'FINAL TURN') : (phLbls[s.phase] || '');
+    const isPT = ['draw','drawn','ability','peek','final_stick'].includes(s.phase);
+    const phaseColor = s.cambioCaller ? '#D4856A' : isPT ? '#5A7D4E' : '#8B8178';
+    const phaseBg = s.cambioCaller ? 'rgba(212,133,106,0.12)' : isPT ? 'rgba(125,155,118,0.1)' : '#F5F0E8';
+    const phaseBorder = s.cambioCaller ? 'rgba(212,133,106,0.3)' : isPT ? 'rgba(125,155,118,0.2)' : '#E5DDD3';
+    const canDk = s.phase === 'draw' && s.deck.length > 0; const canDc = s.phase === 'draw' && s.discard.length > 0;
+    const dTop = s.discard.length > 0 ? s.discard[s.discard.length - 1] : null;
+    const abLbls = { peek_own: '👀 PEEK OWN', peek_other: '🔍 PEEK OPP', blind_swap: '🔄 BLIND SWAP', king_swap: '👑 LOOK & SWAP' };
+    const dAb = s.drawnCard ? this._ability(s.drawnCard) : null;
+    let resultEmoji = '', resultText = '', resultColor = '', aiScore = 0, playerScore = 0;
+    let oppScoreBg = '#FDFBF7', oppScoreBorder = '#E5DDD3', oppScoreColor = '#3D3228';
+    let yourScoreBg = '#FDFBF7', yourScoreBorder = '#E5DDD3', yourScoreColor = '#3D3228';
+    let revealPlayerCards = [], revealAiCards = [];
+    if (s.scores) {
+      const won = s.scores.winner === 'player'; resultEmoji = won ? '🎉' : '😔'; resultText = won ? 'You Win!' : 'You Lose'; resultColor = won ? '#5A7D4E' : '#C05746';
+      aiScore = s.scores.ai; playerScore = s.scores.player;
+      if (!won) { oppScoreBg = 'rgba(125,155,118,0.08)'; oppScoreBorder = '#7D9B76'; oppScoreColor = '#5A7D4E'; }
+      else { yourScoreBg = 'rgba(125,155,118,0.08)'; yourScoreBorder = '#7D9B76'; yourScoreColor = '#5A7D4E'; }
+      const mkRev = (c) => ({ hasCard: !!c, isEmpty: !c, displayRank: c && c.isJoker ? '🃏' : (c ? c.rank : ''), suit: c ? c.suit : '', showSuit: c ? !c.isJoker : false, centerDisplay: c && c.isJoker ? '🃏' : (c ? c.suit : ''), suitColor: this._color(c) });
+      revealPlayerCards = s.playerHand.map(mkRev); revealAiCards = s.aiHand.map(mkRev);
+    }
+    return { isSetup, isReveal, isGame, startGame: () => this.startGame(), playerCards, aiCards, playerCardCount: s.playerHand.filter(Boolean).length, aiCardCount: s.aiHand.filter(Boolean).length, message: s.message, phaseLabel, phaseColor, phaseBg, phaseBorder, onDrawDeck: () => this.drawFromDeck(), onDrawDiscard: () => this.drawFromDiscard(), deckCount: s.deck.length, deckCursor: canDk ? 'pointer' : 'default', deckOpacity: s.deck.length === 0 ? '0.3' : '1', deckAnim: canDk ? 'gentlePulse 2s infinite' : 'none', hasDiscard: !!dTop, noDiscard: !dTop, discardCursor: canDc ? 'pointer' : 'default', discardShadow: canDc ? '0 0 0 2px #D4856A, 0 6px 20px rgba(212,133,106,0.25)' : (dTop ? '0 2px 8px rgba(0,0,0,0.1)' : 'none'), discardCardAnim: s.discardAnim ? 'discardDrop 0.4s ease-out' : 'none', discardRank: dTop && dTop.isJoker ? '🃏' : (dTop ? dTop.rank : ''), discardSuit: dTop ? dTop.suit : '', discardShowSuit: dTop ? !dTop.isJoker : false, discardCenter: dTop && dTop.isJoker ? '🃏' : (dTop ? dTop.suit : ''), discardColor: this._color(dTop), hasDrawnCard: !!s.drawnCard, drawnRank: s.drawnCard && s.drawnCard.isJoker ? '🃏' : (s.drawnCard ? s.drawnCard.rank : ''), drawnSuit: s.drawnCard ? s.drawnCard.suit : '', drawnShowSuit: s.drawnCard ? !s.drawnCard.isJoker : false, drawnCenter: s.drawnCard && s.drawnCard.isJoker ? '🃏' : (s.drawnCard ? s.drawnCard.suit : ''), drawnColor: this._color(s.drawnCard), drawnAbilityLabel: dAb ? abLbls[dAb] : '', actions, hasActions: actions.length > 0, resultEmoji, resultText, resultColor, aiScore, playerScore, oppScoreBg, oppScoreBorder, oppScoreColor, yourScoreBg, yourScoreBorder, yourScoreColor, revealPlayerCards, revealAiCards };
+  }
+}
+
+</script>
+</body>
+</html>
